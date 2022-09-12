@@ -14,7 +14,7 @@ func TestReverse(t *testing.T) {
 		{"!12345", "54321!"},
 	}
 	for _, tc := range testcases {
-		rev := Reverse(tc.in)
+		rev, _ := Reverse(tc.in)
 		if rev != tc.want {
 			t.Errorf("Reverse: %q, want %q", rev, tc.want)
 		}
@@ -22,15 +22,21 @@ func TestReverse(t *testing.T) {
 }
 
 // to test only this function, run `go test -run=FuzzReverse`
+// to run a specific corpus entry with FuzzXxx/testdata eg. go test -run=FuzzReverse/674ae72cbe3ff0c341e8a8fcc254623769b9737d1dff3ded1d7743697cbfbb3f
 func FuzzReverse(f *testing.F) {
 	testcases := []string{"Hello, world", " ", "!12345"}
 	for _, tc := range testcases {
 		f.Add(tc) // Use f.Add to provide a seed corpus
 	}
 	f.Fuzz(func(t *testing.T, orig string) {
-		rev := Reverse(orig)
-		doubleRev := Reverse(rev)
-		t.Logf("Number of runes: orig=%d, rev=%d, doubleRev=%d", utf8.RuneCountInString(orig), utf8.RuneCountInString(rev), utf8.RuneCountInString(doubleRev))
+		rev, err1 := Reverse(orig)
+		if err1 != nil {
+			return
+		}
+		doubleRev, err2 := Reverse(rev)
+		if err2 != nil {
+			return
+		}
 		if orig != doubleRev {
 			t.Errorf("Before: %q, after: %q", orig, doubleRev)
 		}
