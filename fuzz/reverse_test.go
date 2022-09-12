@@ -23,6 +23,8 @@ func TestReverse(t *testing.T) {
 
 // to test only this function, run `go test -run=FuzzReverse`
 // to run a specific corpus entry with FuzzXxx/testdata eg. go test -run=FuzzReverse/674ae72cbe3ff0c341e8a8fcc254623769b9737d1dff3ded1d7743697cbfbb3f
+// The fuzz test will run until it encounters a failing input unless you pass the -fuzztime flag. The default is to run forever if no failures occur, and the process can be interrupted with ctrl-C.
+// Fuzz it with go test -fuzz=Fuzz -fuzztime 30s which will fuzz for 30 seconds before exiting if no failure was found
 func FuzzReverse(f *testing.F) {
 	testcases := []string{"Hello, world", " ", "!12345"}
 	for _, tc := range testcases {
