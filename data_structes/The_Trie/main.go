@@ -21,6 +21,7 @@ func InitTrie() *Trie {
 	return &Trie{root: &Node{}}
 }
 
+// Insert will take in a word and add it to the trie
 func (t *Trie) Insert(w string) {
 
 	currentNode := t.root
@@ -35,6 +36,7 @@ func (t *Trie) Insert(w string) {
 	currentNode.isEnd = true
 }
 
+// Search will take in a word and return true if that word is included in the trie
 func (t *Trie) Search(w string) bool {
 	currentNode := t.root
 	for i := 0; i < len(w); i++ {
