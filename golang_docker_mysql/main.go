@@ -8,15 +8,20 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 	"io/ioutil"
+	"os"
 )
 
-var version = "0.1.3"
+var version = "0.1.5"
 var db *sql.DB
 
 //Connect creates MySQL connection
 func Connect() error {
 	var err error
-		db, err = sql.Open("mysql", "tester:secret@tcp(db:3306)/test")	
+		user := os.Getenv("mysql_user")
+		secret := os.Getenv("mysql_secret")
+		port := os.Getenv("mysql_port")
+		dbname := os.Getenv("mysql_db")
+		db, err = sql.Open("mysql", user +":" + secret + "@tcp(db:" + port + ")/" + dbname)	
 		if err != nil {
 			return err
 		}
@@ -81,7 +86,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
  if err != nil {
     panic(err.Error())
   }
-fmt.Fprintf(w, "User with ID = %s was deleted", params["id"])
+	fmt.Fprintf(w, "User with ID = %s was deleted", params["id"])
 }
 
 func updateUser(w http.ResponseWriter, r *http.Request) {
@@ -125,7 +130,9 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the HomePage! version %s", version)
+
+	env := os.Getenv("env")
+	fmt.Fprintf(w, "Welcome to the HomePage! version: %s, env: %s", version, env)
 	fmt.Println("Endpoint Hit: homePage")
 }
 
