@@ -24,3 +24,5 @@ jobs:
 
       # - name: Test Hello
       #   run: go test ./.../helloworld
+      - name: Test Hello
+        run: go test ./helloworld
