@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // Queue represents a queue that holds a slice
 // like a queue of people, first in first out
@@ -14,14 +17,16 @@ func (q *Queue) Enqueue(v int) {
 }
 
 // Dequeue removes the first value
-func (q *Queue) Dequeue() int {
+func (q *Queue) Dequeue() (int, error) {
 	var toBeRemoved int
 	l := len(q.items)
 	if l > 0 {
 		toBeRemoved = q.items[0]
 		q.items = q.items[1:]
+		return toBeRemoved, nil
 	}
-	return toBeRemoved
+	return 0, errors.New("Queue is empty therefore cannot remove value using the Dequeue method")
+
 }
 
 func main() {
@@ -31,6 +36,20 @@ func main() {
 	q.Enqueue(2)
 	q.Enqueue(9)
 	fmt.Println(q)
-	fmt.Printf("removing value, %v, from queue using method Dequeue\n", q.Dequeue())
+	i, err := q.Dequeue()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("removing value, %v, from queue using method Dequeue\n", i)
+	}
 	fmt.Println(q)
+
+	q2 := Queue{}
+	i, err = q2.Dequeue()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("removing value, %v, from queue using method Dequeue\n", i)
+	}
+	fmt.Println(q2)
 }

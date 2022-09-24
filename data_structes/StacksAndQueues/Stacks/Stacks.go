@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // Stack represents stack that hold a slice
 // Last in first out (like a stack of books)
@@ -15,11 +18,14 @@ func (s *Stack) Push(i int) {
 
 // Pop will remove a value at the end
 // and RETURNs the removed value
-func (s *Stack) Pop() int {
+func (s *Stack) Pop() (int, error) {
 	l := len(s.items)
-	toRemove := s.items[l-1]
-	s.items = s.items[:l-1]
-	return toRemove
+	if l > 0 {
+		toRemove := s.items[l-1]
+		s.items = s.items[:l-1]
+		return toRemove, nil
+	}
+	return 0, errors.New("Stack is empty therefore cannot remove value using the pop method")
 }
 
 func main() {
@@ -29,7 +35,20 @@ func main() {
 	s.Push(4)
 	s.Push(8)
 	fmt.Println(s)
-	fmt.Printf("removing last value, %v, using the pop method\n", s.Pop())
+	v, err := s.Pop()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("removing last value, %v, using the pop method\n", v)
+	}
 	fmt.Println(s)
 
+	s2 := Stack{}
+	v, err = s2.Pop()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("removing last value, %v, using the pop method\n", v)
+	}
+	fmt.Println()
 }
