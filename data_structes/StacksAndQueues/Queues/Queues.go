@@ -5,6 +5,9 @@ import (
 	"fmt"
 )
 
+// ErrEmptyQueue error informs that queue is empty
+var ErrEmptyQueue = errors.New("Empty Queue")
+
 // Queue represents a queue that holds a slice
 // like a queue of people, first in first out
 type Queue struct {
@@ -25,7 +28,7 @@ func (q *Queue) Dequeue() (int, error) {
 		q.items = q.items[1:]
 		return toBeRemoved, nil
 	}
-	return 0, errors.New("Queue is empty therefore cannot remove value using the Dequeue method")
+	return 0, fmt.Errorf("Cannot remove value: %w", ErrEmptyQueue)
 
 }
 
@@ -38,7 +41,10 @@ func main() {
 	fmt.Println(q)
 	i, err := q.Dequeue()
 	if err != nil {
-		fmt.Println(err)
+		// ignores if ErrEmptyQueue error exists in err
+		if !errors.Is(err, ErrEmptyQueue) {
+			fmt.Println(err)
+		}
 	} else {
 		fmt.Printf("removing value, %v, from queue using method Dequeue\n", i)
 	}
@@ -47,7 +53,10 @@ func main() {
 	q2 := Queue{}
 	i, err = q2.Dequeue()
 	if err != nil {
-		fmt.Println(err)
+		// ignores if ErrEmptyQueue error exists in err
+		if !errors.Is(err, ErrEmptyQueue) {
+			fmt.Println(err)
+		}
 	} else {
 		fmt.Printf("removing value, %v, from queue using method Dequeue\n", i)
 	}
