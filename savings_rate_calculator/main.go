@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 type Account struct {
 	Amount float64
 }
@@ -10,11 +12,14 @@ func (a *Account) Deposit(v float64) {
 
 func (a Account) Cal() float64 {
 
+	var result float64 = a.Amount * 0.01
 	if a.Amount > 1000 {
-		return a.Amount * 0.03
+		result = a.Amount * 0.03
 	} else if a.Amount > 500 {
-		return a.Amount * 0.02
+		result = a.Amount * 0.02
+	} else {
+
 	}
 
-	return a.Amount * 0.01
+	return math.Floor(result*100) / 100
 }
